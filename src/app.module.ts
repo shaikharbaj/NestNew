@@ -1,22 +1,20 @@
 import { Module } from '@nestjs/common';
-import { ClientsModule, Transport } from '@nestjs/microservices';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
-
-
+import { AuthModule } from './auth/auth.module';
+import { ConfigModule } from '@nestjs/config';
+import { JwtModule } from '@nestjs/jwt';
+import { UploadModule } from './upload/upload.module';
+import { UploadService } from './upload/upload.service';
+import { UploadController } from './upload/upload.controller';
 @Module({
   imports: [
-      ClientsModule.register([
-            {
-                name:"AUTHMICROSERVICES",
-                transport:Transport.TCP,
-                options:{
-                      port:8002
-                }
-            }
-      ])
+    ConfigModule.forRoot({
+      envFilePath: '.env',
+      isGlobal: true,
+    }),
+    AuthModule,
+    UploadModule,
   ],
-  controllers: [AppController],
-  providers: [AppService],
+  controllers: [UploadController],
+  providers: [UploadService],
 })
 export class AppModule {}
